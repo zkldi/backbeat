@@ -957,7 +957,7 @@ impl Backbeat {
 							WHEN tc.id GLOB 'sha256/*' THEN (
 							SELECT b.id
 							FROM bundle b
-								WHERE 'sha256/' || b.chart_sha256 = tc.id
+								WHERE b.chart_sha256 = substr(tc.id, 8)
 							LIMIT 1
 						)
 						ELSE (
@@ -1123,7 +1123,7 @@ impl Backbeat {
 							WHEN cc.id GLOB 'sha256/*' THEN (
 							SELECT b.id
 							FROM bundle b
-								WHERE 'sha256/' || b.chart_sha256 = cc.id
+								WHERE b.chart_sha256 = substr(cc.id, 8)
 							LIMIT 1
 						)
 						ELSE (
@@ -1617,7 +1617,7 @@ impl Backbeat {
 						CAST(COALESCE(SUM(
 							CASE WHEN tc.url IS NOT NULL AND (
 								CASE WHEN tc.id GLOB 'sha256/*' THEN EXISTS (
-									SELECT 1 FROM bundle b WHERE 'sha256/' || b.chart_sha256 = tc.id
+									SELECT 1 FROM bundle b WHERE b.chart_sha256 = substr(tc.id, 8)
 								) ELSE EXISTS (
 									SELECT 1
 									FROM chart_id ci
@@ -1650,7 +1650,7 @@ impl Backbeat {
 						CAST(COALESCE(SUM(
 							CASE WHEN cc.url IS NOT NULL AND (
 								CASE WHEN cc.id GLOB 'sha256/*' THEN EXISTS (
-									SELECT 1 FROM bundle b WHERE 'sha256/' || b.chart_sha256 = cc.id
+									SELECT 1 FROM bundle b WHERE b.chart_sha256 = substr(cc.id, 8)
 								) ELSE EXISTS (
 									SELECT 1
 									FROM chart_id ci
