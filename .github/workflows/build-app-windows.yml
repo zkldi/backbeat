@@ -45,7 +45,7 @@ jobs:
                   certutil -hashfile target\package-sqlite\sqlite.zip SHA256 | findstr /i "712a7d09d2a22652fb06a49af516e051979a3984adb067da86760e60ed51a7f5" || exit /b 1
                   tar -xf target\package-sqlite\sqlite.zip -C target\package-sqlite
                   copy target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.h target\package-sqlite\include\sqlite3.h
-                  cl /nologo /O2 /c /DSQLITE_ENABLE_COLUMN_METADATA /DSQLITE_ENABLE_FTS5 /DSQLITE_THREADSAFE=1 /DSQLITE_USE_URI=1 target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.c /Fotarget\package-sqlite\sqlite3.obj || exit /b 1
+                  cl /nologo /O2 /MD /c /DSQLITE_ENABLE_COLUMN_METADATA /DSQLITE_ENABLE_FTS5 /DSQLITE_THREADSAFE=1 /DSQLITE_USE_URI=1 target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.c /Fotarget\package-sqlite\sqlite3.obj || exit /b 1
                   lib /nologo /OUT:target\package-sqlite\lib\sqlite3.lib target\package-sqlite\sqlite3.obj || exit /b 1
 
             - name: Install SQLx CLI

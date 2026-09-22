@@ -188,7 +188,7 @@ jobs:
                   certutil -hashfile target\package-sqlite\sqlite.zip SHA256 | findstr /i "712a7d09d2a22652fb06a49af516e051979a3984adb067da86760e60ed51a7f5" || exit /b 1
                   tar -xf target\package-sqlite\sqlite.zip -C target\package-sqlite
                   copy target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.h target\package-sqlite\include\sqlite3.h
-                  cl /nologo /O2 /c /DSQLITE_ENABLE_COLUMN_METADATA /DSQLITE_ENABLE_FTS5 /DSQLITE_THREADSAFE=1 /DSQLITE_USE_URI=1 target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.c /Fotarget\package-sqlite\sqlite3.obj || exit /b 1
+                  cl /nologo /O2 /MD /c /DSQLITE_ENABLE_COLUMN_METADATA /DSQLITE_ENABLE_FTS5 /DSQLITE_THREADSAFE=1 /DSQLITE_USE_URI=1 target\package-sqlite\sqlite-amalgamation-3460000\sqlite3.c /Fotarget\package-sqlite\sqlite3.obj || exit /b 1
                   lib /nologo /OUT:target\package-sqlite\lib\sqlite3.lib target\package-sqlite\sqlite3.obj || exit /b 1
 
             - name: Install SQLx CLI
@@ -276,6 +276,7 @@ jobs:
                   cp "target/${{ matrix.target }}/release/${{ matrix.library }}" "$package_dir/lib/${{ matrix.library }}"
                   cp "target/package-sqlite/lib/libsqlite3.a" "$package_dir/lib/libsqlite3.a"
                   cp "rust/backbeat_c_sdk/cmake/BackbeatConfig.cmake" "$package_dir/lib/cmake/Backbeat/BackbeatConfig.cmake"
+                  cp "rust/backbeat_c_sdk/cmake/BackbeatTargets.cmake" "$package_dir/lib/cmake/Backbeat/BackbeatTargets.cmake"
 
                   if [[ "${{ runner.os }}" == "macOS" ]]; then
                     private_libs="-lsqlite3 -framework Security -framework SystemConfiguration -framework CoreFoundation -liconv"
@@ -355,6 +356,7 @@ jobs:
                   copy "target\${{ matrix.target }}\release\${{ matrix.library }}" "%PACKAGE_DIR%\lib\${{ matrix.library }}"
                   copy "target\package-sqlite\lib\sqlite3.lib" "%PACKAGE_DIR%\lib\sqlite3.lib"
                   copy "rust\backbeat_c_sdk\cmake\BackbeatConfig.cmake" "%PACKAGE_DIR%\lib\cmake\Backbeat\BackbeatConfig.cmake"
+                  copy "rust\backbeat_c_sdk\cmake\BackbeatTargets.cmake" "%PACKAGE_DIR%\lib\cmake\Backbeat\BackbeatTargets.cmake"
 
                   set "LINK_LIBS=%PACKAGE_DIR%\lib\sqlite3.lib %LINK_LIBS%"
 

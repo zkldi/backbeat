@@ -39,7 +39,7 @@ With CMake, link the supplied targets:
 ```cmake
 find_package(Backbeat CONFIG REQUIRED)
 
-target_link_libraries(your_game PRIVATE Backbeat::Backbeat Backbeat::SQLite)
+target_link_libraries(your_game PRIVATE Backbeat::Backbeat)
 ```
 
 ## 2. Things you probably want to implement
