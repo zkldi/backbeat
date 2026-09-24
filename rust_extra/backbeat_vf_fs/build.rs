@@ -1,27 +1,16 @@
 use std::env;
-use std::fs;
 use std::path::Path;
-use std::process::Command;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let store_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../rust/backbeat_sdk");
-	let database = Path::new(&env::var("OUT_DIR")?).join("template.backbeat.db");
-	let _ = fs::remove_file(&database);
-	let database_url = format!("sqlite:///{}", database.display());
+	let db_path = Path::new(&env::var("CARGO_MANIFEST_DIR")?)
+		.join("../../rust/backbeat_sdk/template.backbeat.db");
+	let db_url = format!("sqlite://{}?mode=ro", db_path.display());
 
-	let status = Command::new("cargo")
-		.current_dir(&store_dir)
-		.args(["sqlx", "database", "setup", "-D", &database_url])
-		.status()?;
-	if !status.success() {
-		panic!("failed to build backbeat_vf_fs template database {status:?}");
-	}
+	// Compile-time `sqlx::query!` checks use this URL (no `.env` required).
+	println!("cargo:rustc-env=DATABASE_URL={db_url}");
 
-	println!("cargo:rustc-env=DATABASE_URL={database_url}");
-	println!(
-		"cargo:rerun-if-changed={}",
-		store_dir.join("migrations").display()
-	);
+	// Tell Cargo that if the given file changes, to rerun this build script.
+	println!("cargo:rerun-if-changed={}", db_path.display());
 
 	Ok(())
 }

@@ -1,6 +1,6 @@
 [package]
 name = "backbeat_c_sdk"
-version = "0.5.0-beta"
+version = "0.5.1"
 edition.workspace = true
 authors = ["zkldi <zkldi@proton.me>"]
 description = "C SDK for Backbeat. Trivially integratable into all good games."

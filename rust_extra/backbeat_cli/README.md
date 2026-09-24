@@ -7,7 +7,7 @@ The backbeat CLI is a swiss army knife for interfacing with your backbeat store.
 You can install the backbeat CLI straight off of cargo:
 
 ```sh
-cargo install --locked bkb --version 0.5.0-beta
+cargo install --locked bkb --version 0.5.1
 # Be aware that backbeat_cli is a crate owned by someone else
 # and has nothing to do with us!
 ```

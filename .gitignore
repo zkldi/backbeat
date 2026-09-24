@@ -24,7 +24,6 @@ java/build/
 
 flamegraph.svg
 
-rust/backbeat_sdk/template.backbeat.db
 rust/backbeat_sdk/template.backbeat.db-wal
 rust/backbeat_sdk/template.backbeat.db-shm
 
