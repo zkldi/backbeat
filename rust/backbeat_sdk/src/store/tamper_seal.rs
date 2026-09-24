@@ -115,7 +115,6 @@ pub(super) fn table_columns(pool: &SqlitePool) -> Result<BTreeMap<String, BTreeS
 			WHERE type = 'table'
 				AND name NOT LIKE 'sqlite_%'
 				AND name NOT GLOB 'bundle_fts_*'
-				AND name != '_db_migrations'
 			ORDER BY name
 			"#,
 		)

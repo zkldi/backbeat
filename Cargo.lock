@@ -385,7 +385,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_app"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "arc-swap",
  "axum",
@@ -418,7 +418,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_c_sdk"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "backbeat_core",
  "backbeat_sdk",
@@ -434,7 +434,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_core"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "base64-simd",
  "chrono",
@@ -458,7 +458,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_inspector"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "backbeat_core",
  "md-5 0.10.6",
@@ -475,7 +475,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_packager"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "backbeat_core",
  "backbeat_inspector",
@@ -494,7 +494,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_sdk"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "backbeat_core",
  "backbeat_inspector",
@@ -525,7 +525,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_server"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "axum",
  "backbeat_core",
@@ -545,7 +545,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_server_client"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "backbeat_core",
  "backbeat_store_config",
@@ -560,7 +560,7 @@ dependencies = [
 
 [[package]]
 name = "backbeat_store_config"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "directories",
  "fs-err",
@@ -755,7 +755,7 @@ dependencies = [
 
 [[package]]
 name = "bkb"
-version = "0.5.0-beta"
+version = "0.5.1"
 dependencies = [
  "anyhow",
  "assert_cmd",
