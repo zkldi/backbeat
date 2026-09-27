@@ -1,0 +1,29 @@
+name: Build C API SDK
+
+run-name: Build C API SDK from ${{ github.sha }}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  require-main:
+    name: Require main
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check selected branch
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "This workflow may only be run from main." >&2
+            exit 1
+          fi
+
+  build:
+    name: Build and test SDKs
+    needs: require-main
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/ci.yml
+    with:
+      capi_only: true
