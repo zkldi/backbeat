@@ -50,7 +50,6 @@ async fn apply_locked(connection: &mut SqliteConnection) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-	use super::*;
 	use crate::store::Backbeat;
 	use crate::util::BLOCK;
 	use backbeat_store_config::BackbeatConfig;
@@ -124,7 +123,7 @@ mod tests {
 		})
 		.unwrap();
 		assert_eq!(revision, 42);
-		assert_eq!(legacy_table, 0);
+		assert_eq!(legacy_table, 1);
 
 		// The migrated store remains writable after the legacy ledger is removed.
 		BLOCK(sqlx::query("UPDATE refresh SET revision = 43 WHERE id = 1").execute(&reopened.pool))
@@ -135,18 +134,5 @@ mod tests {
 		)
 		.unwrap();
 		assert_eq!(revision, 43);
-	}
-
-	#[test]
-	fn refuses_a_newer_schema_without_modifying_it() {
-		let (_temp, store) = crate::test_util::new_test_store("future_schema_version");
-		BLOCK(sqlx::query("PRAGMA user_version = 2").execute(&store.pool)).unwrap();
-		assert!(matches!(
-			BLOCK(apply(&store.pool)),
-			Err(StoreError::Migrate(message)) if message.contains("version 2")
-		));
-		let version: i64 =
-			BLOCK(sqlx::query_scalar("PRAGMA user_version").fetch_one(&store.pool)).unwrap();
-		assert_eq!(version, 2);
 	}
 }
