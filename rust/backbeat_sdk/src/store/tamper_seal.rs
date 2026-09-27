@@ -107,6 +107,7 @@ fn expected_table_columns() -> BTreeMap<String, BTreeSet<String>> {
 }
 
 pub(super) fn table_columns(pool: &SqlitePool) -> Result<BTreeMap<String, BTreeSet<String>>> {
+	// `_db_migrations` is legacy stuff from v0.5.0-beta
 	let tables = BLOCK(
 		sqlx::query!(
 			r#"

@@ -3,6 +3,7 @@
 mod export;
 pub mod get;
 mod internal;
+mod schema;
 pub mod stats;
 mod tamper_seal;
 
@@ -88,7 +89,7 @@ pub enum StoreError {
 	Corrupt(String),
 
 	#[error("migration error: {0}")]
-	Migrate(#[from] sqlx::migrate::MigrateError),
+	Migrate(String),
 
 	#[error("I/O error: {0}")]
 	Io(#[from] std::io::Error),
@@ -235,9 +236,7 @@ impl Backbeat {
 				.max_connections(16)
 				.connect_with(opts),
 		)?;
-		let mut migrator = sqlx::migrate!();
-		migrator.dangerous_set_table_name("_db_migrations");
-		BLOCK(migrator.run(&pool))?;
+		BLOCK(schema::apply(&pool))?;
 		tamper_seal::validate(&pool)?;
 
 		let downloads = DownloadManager::new(

@@ -64,20 +64,20 @@ unreachable_pub = "warn"
 [workspace.dependencies]
 
 # backbeat!
-backbeat_core = { version = "0.5.0-beta", path = "rust/backbeat_core" }
-backbeat_server_client = { version = "0.5.0-beta", path = "rust/backbeat_server_client" }
-backbeat_sdk = { version = "0.5.0-beta", path = "rust/backbeat_sdk" }
-backbeat_store_config = { version = "0.5.0-beta", path = "rust/backbeat_store_config" }
+backbeat_core = { version = "0.5.1", path = "rust/backbeat_core" }
+backbeat_server_client = { version = "0.5.1", path = "rust/backbeat_server_client" }
+backbeat_sdk = { version = "0.5.1", path = "rust/backbeat_sdk" }
+backbeat_store_config = { version = "0.5.1", path = "rust/backbeat_store_config" }
 
 # Extra backbeat stuff - apps and other extra integrations.
-backbeat_inspector = { version = "0.5.0-beta", path = "rust_extra/backbeat_inspector" }
-backbeat_packager = { version = "0.5.0-beta", path = "rust_extra/backbeat_packager" }
+backbeat_inspector = { version = "0.5.1", path = "rust_extra/backbeat_inspector" }
+backbeat_packager = { version = "0.5.1", path = "rust_extra/backbeat_packager" }
 backbeat_vf_config = { path = "rust_extra/backbeat_vf_config" }
 backbeat_vf_fs = { path = "rust_extra/backbeat_vf_fs" }
 backbeat_vf_mountd = { path = "rust_extra/backbeat_vf_mountd" }
 backbeat_vf_fuse = { path = "rust_extra/backbeat_vf_fuse" }
 backbeat_vf_winfsp = { path = "rust_extra/backbeat_vf_winfsp" }
-backbeat_server = { version = "0.5.0-beta", path = "rust_extra/backbeat_server" }
+backbeat_server = { version = "0.5.1", path = "rust_extra/backbeat_server" }
 
 # Other small packages.
 rg_formats = { version = "0.2.0", path = "rust_misc/rg_formats" }
@@ -116,7 +116,7 @@ predicates = "3"
 directories = "5.0.1"
 
 # database
-sqlx = { version = "0.9.0", features = [
+sqlx = { version = "0.9.0", default-features = false, features = [
 	"runtime-tokio",
 	"sqlite-unbundled",
 	"derive",
