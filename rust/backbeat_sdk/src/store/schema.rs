@@ -74,26 +74,63 @@ mod tests {
 	use super::*;
 	use crate::store::Backbeat;
 	use crate::util::BLOCK;
+	use backbeat_store_config::BackbeatConfig;
+	use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
 
 	#[test]
 	fn opens_legacy_store_with_a_different_checksum() {
-		let (temp, store) = crate::test_util::new_test_store("legacy_migration_checksum");
+		let temp = tempfile::Builder::new()
+			.prefix("legacy_migration_checksum")
+			.tempdir()
+			.expect("create legacy store directory");
+		let config_dir = temp.path().join("config");
+		let store_dir = temp.path().join("data");
+		let mut config = BackbeatConfig::default();
+		config.store.path = store_dir.clone();
+		config.write_to_dir(&config_dir).expect("write test config");
+		std::fs::create_dir_all(&store_dir).expect("create store directory");
+
+		// Build the on-disk layout produced by the SQLx migration from the
+		// previous release, before the new opener sees the database.
+		let legacy_pool = BLOCK(
+			SqlitePoolOptions::new().connect_with(
+				SqliteConnectOptions::new()
+					.filename(store_dir.join(Backbeat::DB_FILENAME))
+					.create_if_missing(true),
+			),
+		)
+		.expect("create legacy database");
 		BLOCK(async {
-			sqlx::query("CREATE TABLE _db_migrations (version BIGINT PRIMARY KEY, checksum BLOB)")
-				.execute(&store.pool)
+			sqlx::raw_sql(include_str!("../../schema/v1.sql"))
+				.execute(&legacy_pool)
 				.await?;
-			sqlx::query("INSERT INTO _db_migrations (version, checksum) VALUES (1, X'00')")
-				.execute(&store.pool)
+			sqlx::query(
+				"CREATE TABLE _db_migrations (
+					version BIGINT PRIMARY KEY,
+					description TEXT NOT NULL,
+					installed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					success BOOLEAN NOT NULL,
+					checksum BLOB NOT NULL,
+					execution_time BIGINT NOT NULL
+				)",
+			)
+			.execute(&legacy_pool)
+			.await?;
+			sqlx::query(
+				"INSERT INTO _db_migrations (version, description, success, checksum, execution_time)
+				 VALUES (20230312222545, 'zenithforever', TRUE, X'00', 1)",
+			)
+				.execute(&legacy_pool)
 				.await?;
 			sqlx::query("UPDATE refresh SET revision = 42 WHERE id = 1")
-				.execute(&store.pool)
+				.execute(&legacy_pool)
 				.await?;
 			Ok::<_, sqlx::Error>(())
 		})
 		.unwrap();
-		drop(store);
+		drop(legacy_pool);
 
-		let reopened = Backbeat::open_with_overridden_config_dir(temp.path().join("config"))
+		let reopened = Backbeat::open_with_overridden_config_dir(&config_dir)
 			.expect("reopen a store created by SQLx migrations");
 		let (revision, legacy_table): (i64, i64) = BLOCK(async {
 			let revision = sqlx::query_scalar("SELECT revision FROM refresh WHERE id = 1")
@@ -109,6 +146,16 @@ mod tests {
 		.unwrap();
 		assert_eq!(revision, 42);
 		assert_eq!(legacy_table, 0);
+
+		// The migrated store remains writable after the legacy ledger is removed.
+		BLOCK(sqlx::query("UPDATE refresh SET revision = 43 WHERE id = 1").execute(&reopened.pool))
+			.unwrap();
+		let revision: i64 = BLOCK(
+			sqlx::query_scalar("SELECT revision FROM refresh WHERE id = 1")
+				.fetch_one(&reopened.pool),
+		)
+		.unwrap();
+		assert_eq!(revision, 43);
 	}
 
 	#[test]
