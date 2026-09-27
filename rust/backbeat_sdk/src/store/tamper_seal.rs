@@ -107,6 +107,7 @@ fn expected_table_columns() -> BTreeMap<String, BTreeSet<String>> {
 }
 
 pub(super) fn table_columns(pool: &SqlitePool) -> Result<BTreeMap<String, BTreeSet<String>>> {
+	// `_db_migrations` is legacy stuff from v0.5.0-beta
 	let tables = BLOCK(
 		sqlx::query!(
 			r#"
@@ -115,6 +116,7 @@ pub(super) fn table_columns(pool: &SqlitePool) -> Result<BTreeMap<String, BTreeS
 			WHERE type = 'table'
 				AND name NOT LIKE 'sqlite_%'
 				AND name NOT GLOB 'bundle_fts_*'
+				AND name != '_db_migrations'
 			ORDER BY name
 			"#,
 		)

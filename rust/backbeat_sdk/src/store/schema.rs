@@ -4,9 +4,6 @@ use sqlx::{SqliteConnection, SqlitePool};
 
 use crate::store::{Result, StoreError};
 
-const APPLICATION_ID: i64 = 0x7270_0727;
-const CURRENT_VERSION: i64 = 1;
-
 pub(super) async fn apply(pool: &SqlitePool) -> Result<()> {
 	apply_inner(pool).await.map_err(|error| match error {
 		StoreError::Db(database_error) => StoreError::Migrate(database_error.to_string()),
@@ -34,38 +31,20 @@ async fn apply_inner(pool: &SqlitePool) -> Result<()> {
 }
 
 async fn apply_locked(connection: &mut SqliteConnection) -> Result<()> {
+	// this is more of a "should-reapply-schema" thing. Backbeat has to be
+	// 100% back-compat from now on, no migrations. GG.
+	const CURRENT_VERSION: i64 = 2;
+
 	let version: i64 = sqlx::query_scalar("PRAGMA user_version")
 		.fetch_one(&mut *connection)
 		.await?;
-	let application_id: i64 = sqlx::query_scalar("PRAGMA application_id")
-		.fetch_one(&mut *connection)
-		.await?;
 
-	if !(0..=CURRENT_VERSION).contains(&version) {
-		return Err(StoreError::Migrate(format!(
-			"unsupported database schema version {version}; this build supports up to {CURRENT_VERSION}"
-		)));
-	}
-	let expected_application_id = if version == 0 { 0 } else { APPLICATION_ID };
-	if application_id != expected_application_id {
-		return Err(StoreError::Migrate(format!(
-			"unexpected SQLite application ID {application_id:#x}"
-		)));
-	}
-
-	// Add future schema revisions here in ascending order, gated by the version
-	// read above. Each SQL file sets `user_version` to its own revision.
-	if version < 1 {
-		sqlx::raw_sql(include_str!("../../schema/v1.sql"))
+	if version != CURRENT_VERSION {
+		sqlx::raw_sql(include_str!("../../schema/schema.sql"))
 			.execute(&mut *connection)
 			.await?;
 	}
 
-	// Older releases used SQLx checksums, which differ across platforms. The
-	// SQLite schema version is authoritative; this table is no longer needed.
-	sqlx::query("DROP TABLE IF EXISTS _db_migrations")
-		.execute(&mut *connection)
-		.await?;
 	Ok(())
 }
 
@@ -101,7 +80,7 @@ mod tests {
 		)
 		.expect("create legacy database");
 		BLOCK(async {
-			sqlx::raw_sql(include_str!("../../schema/v1.sql"))
+			sqlx::raw_sql(include_str!("../../schema/schema.sql"))
 				.execute(&legacy_pool)
 				.await?;
 			sqlx::query(
