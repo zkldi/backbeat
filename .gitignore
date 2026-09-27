@@ -13,6 +13,8 @@ java/build/
 
 # env stuff
 *.env
+*.db-shm
+*.db-wal
 
 !*.example.*
 *.local
@@ -23,9 +25,6 @@ java/build/
 !.ci.env
 
 flamegraph.svg
-
-rust/backbeat_sdk/template.backbeat.db-wal
-rust/backbeat_sdk/template.backbeat.db-shm
 
 # for me
 
