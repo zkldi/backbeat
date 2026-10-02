@@ -36,7 +36,7 @@ app-build-macos:
 		bun install
 	fi
 
-	bun tauri build --bundles app
+	bun tauri build --target universal-apple-darwin --bundles app,dmg
 
 # Build a debug GUI .app and install it to /Applications (macOS deep links).
 install-app:
