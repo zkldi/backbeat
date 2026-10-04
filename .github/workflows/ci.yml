@@ -252,7 +252,7 @@ jobs:
               run: |
                   native_library="$PWD/target/java-sdk/${{ matrix.target }}/release/${{ matrix.shared_library }}"
                   gradle -p java test \
-                    -PbackbeatVersion=0.5.0 \
+                    -PbackbeatVersion=1.0.0 \
                     "-PnativeLibrary=$native_library" \
                     -PnativePlatform=${{ matrix.native_platform }}
 
@@ -261,7 +261,7 @@ jobs:
               run: |
                   native_library="$PWD/target/java-sdk/${{ matrix.target }}/release/${{ matrix.shared_library }}"
                   gradle -p java nativeJar \
-                    -PbackbeatVersion=0.5.0 \
+                    -PbackbeatVersion=1.0.0 \
                     "-PnativeLibrary=$native_library" \
                     -PnativePlatform=${{ matrix.native_platform }}
 
@@ -380,7 +380,7 @@ jobs:
 
             - name: Stage Java native JAR
               shell: bash
-              run: cp "java/build/libs/backbeat-java-sdk-0.5.0-${{ matrix.native_platform }}.jar" "dist/backbeat-java-sdk-0.5.0-${{ matrix.native_platform }}.jar"
+              run: cp "java/build/libs/backbeat-java-sdk-1.0.0-${{ matrix.native_platform }}.jar" "dist/backbeat-java-sdk-1.0.0-${{ matrix.native_platform }}.jar"
 
             - name: Upload package
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -388,7 +388,7 @@ jobs:
                   name: ${{ matrix.package }}
                   path: |
                       dist/${{ matrix.package }}.zip
-                      dist/backbeat-java-sdk-0.5.0-${{ matrix.native_platform }}.jar
+                      dist/backbeat-java-sdk-1.0.0-${{ matrix.native_platform }}.jar
                   archive: true
                   if-no-files-found: error
                   retention-days: 14
@@ -415,15 +415,15 @@ jobs:
                   gradle-version: "8.10.2"
 
             - name: Test and build Java SDK
-              run: gradle -p java test jar sourcesJar -PbackbeatVersion=0.5.0
+              run: gradle -p java test jar sourcesJar -PbackbeatVersion=1.0.0
 
             - name: Upload Java SDK
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
               with:
                   name: backbeat-java-sdk-api
                   path: |
-                      java/build/libs/backbeat-java-sdk-0.5.0.jar
-                      java/build/libs/backbeat-java-sdk-0.5.0-sources.jar
+                      java/build/libs/backbeat-java-sdk-1.0.0.jar
+                      java/build/libs/backbeat-java-sdk-1.0.0-sources.jar
                   archive: true
                   if-no-files-found: error
                   retention-days: 14

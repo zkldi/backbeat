@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS "chart_data" (
 	gzip_data BLOB NOT NULL,
 	uncompressed_size INTEGER NOT NULL
 ) STRICT;
+CREATE INDEX chart_data_uncompressed_size ON chart_data(uncompressed_size);
 
 -- Extra chartIDs associated with a chart.
 --

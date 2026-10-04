@@ -1,6 +1,6 @@
 [package]
 name = "backbeat_packager"
-version = "0.5.1"
+version = "1.0.0"
 edition.workspace = true
 description = "Package up rhythm game charts into backbeat files."
 authors = ["zkldi <zkldi@proton.me>"]

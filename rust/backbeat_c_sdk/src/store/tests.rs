@@ -71,6 +71,10 @@ fn accessors_return_owned_values() {
 	assert_eq!(unsafe { bkb_store_config_dir(store, &mut string) }, BKB_OK);
 	assert_eq!(unsafe { take_string(string) }, config_dir.to_string_lossy());
 
+	let url = CString::new("https://data.makiba.ac").unwrap();
+	let server = bkb_server_config { url: url.as_ptr() };
+	assert_eq!(unsafe { bkb_store_server_rm(store, &server) }, BKB_OK);
+
 	let mut has_zero_data_servers = false;
 	assert_eq!(
 		unsafe { bkb_store_has_zero_data_servers(store, &mut has_zero_data_servers) },

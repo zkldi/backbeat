@@ -74,7 +74,7 @@ pub struct BackbeatConfig {
 	pub downloads: DownloadsConfig,
 
 	/// `[[server]]`: Backbeat Data Servers to fetch data from.
-	#[serde(default, rename = "server")]
+	#[serde(default = "default_servers", rename = "server")]
 	#[serde(
 		deserialize_with = "deserialize_servers",
 		serialize_with = "serialize_servers"
@@ -86,6 +86,12 @@ pub struct BackbeatConfig {
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub info: Option<BackbeatServerInfo>,
+}
+
+fn default_servers() -> Vec<ServerConfig> {
+	vec![ServerConfig {
+		url: "https://data.makiba.ac".into(),
+	}]
 }
 
 impl BackbeatConfig {
@@ -306,7 +312,7 @@ mod tests {
 		assert_eq!(cfg.store.path, default_store_dir());
 		assert_eq!(cfg.downloads.concurrency, 32);
 		assert_eq!(cfg.downloads.stream, ByteSize(32 * 1024 * 1024));
-		assert!(cfg.servers.is_empty());
+		assert_eq!(cfg.servers.len(), 1);
 		assert!(cfg.info.is_none());
 	}
 
@@ -419,7 +425,7 @@ inline = "8Ki""#,
 		.unwrap();
 		assert_eq!(cfg.store.inline, ByteSize(8 * 1024));
 		assert!(cfg.info.is_none());
-		assert!(cfg.servers.is_empty());
+		assert_eq!(cfg.servers.len(), 1);
 	}
 
 	#[test]
