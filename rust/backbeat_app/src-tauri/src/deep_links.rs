@@ -2,7 +2,7 @@
 //!
 //! Three custom urls are supported:
 //!
-//! - `backbeat://charts/<id>/<alg>` -> [`Backbeat::server_download_chart`]
+//! - `backbeat://charts/<alg>/<id>` -> [`Backbeat::server_download_chart`]
 //! - `backbeat://bundle/<id>`      -> [`Backbeat::server_download_bundle`]
 //! - `backbeat://collection/<uri-encoded-url>` -> collection installation
 
@@ -144,19 +144,21 @@ pub fn parse(url: &Url) -> Result<DeepLinkAction, String> {
 	let mut segs = segments(url);
 	match segs.next().map(str::to_ascii_lowercase).as_deref() {
 		Some("charts") => {
-			let id = segs
-				.next()
-				.ok_or_else(|| "backbeat://charts/<id>/<alg>: missing id".to_string())?
-				.to_string();
 			let algorithm = segs
 				.next()
-				.ok_or_else(|| "backbeat://charts/<id>/<alg>: missing algorithm".to_string())
+				.ok_or_else(|| "backbeat://charts/<alg>/<id>: missing algorithm".to_string())
 				.and_then(|s| {
 					s.parse::<IdAlgorithm>()
 						.map_err(|err| format!("invalid algorithm `{s}`: {err}"))
 				})?;
+
+			let id = segs
+				.next()
+				.ok_or_else(|| "backbeat://charts/<alg>/<id>: missing id".to_string())?
+				.to_string();
+
 			if segs.next().is_some() {
-				return Err("backbeat://charts/<id>/<alg>: too many path segments".to_string());
+				return Err("backbeat://charts/<alg>/<id>: too many path segments".to_string());
 			}
 			Ok(DeepLinkAction::Chart {
 				chart_id: ChartId {
@@ -381,7 +383,7 @@ mod tests {
 
 	#[test]
 	fn parses_chart_link_with_host_form() {
-		let action = parse(&url("backbeat://charts/abc123/md5")).unwrap();
+		let action = parse(&url("backbeat://charts/md5/abc123")).unwrap();
 		assert_eq!(
 			action,
 			DeepLinkAction::Chart {
@@ -395,7 +397,7 @@ mod tests {
 
 	#[test]
 	fn parses_chart_link_with_empty_host_form() {
-		let action = parse(&url("backbeat:///charts/deadbeef/sha256")).unwrap();
+		let action = parse(&url("backbeat:///charts/sha256/deadbeef")).unwrap();
 		assert_eq!(
 			action,
 			DeepLinkAction::Chart {
@@ -409,7 +411,7 @@ mod tests {
 
 	#[test]
 	fn parses_chart_link_with_unknown_valid_algorithm() {
-		let action = parse(&url("backbeat://charts/abc123/future-algorithm")).unwrap();
+		let action = parse(&url("backbeat://charts/future-algorithm/abc123")).unwrap();
 		assert_eq!(
 			action,
 			DeepLinkAction::Chart {
@@ -420,7 +422,7 @@ mod tests {
 
 	#[test]
 	fn rejects_chart_link_with_invalid_algorithm() {
-		assert!(parse(&url("backbeat://charts/abc123/future--algorithm")).is_err());
+		assert!(parse(&url("backbeat://charts/future--algorithm/abc123")).is_err());
 	}
 
 	#[test]
