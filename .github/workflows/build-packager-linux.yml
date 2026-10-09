@@ -1,0 +1,87 @@
+name: Build zk's Backbeat Packager (Linux)
+
+run-name: Build Linux packager from ${{ github.ref_name }} at ${{ github.sha }}
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    build:
+        name: Build Linux x86-64 packages
+        runs-on: ubuntu-22.04
+        timeout-minutes: 60
+        env:
+            CARGO_INCREMENTAL: "0"
+
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+            - name: Install native dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install --yes --no-install-recommends \
+                    build-essential \
+                    file \
+                    libayatana-appindicator3-dev \
+                    libfuse2 \
+                    librsvg2-dev \
+                    libsqlite3-dev \
+                    libssl-dev \
+                    libwebkit2gtk-4.1-dev \
+                    libxdo-dev \
+                    patchelf \
+                    pkg-config \
+                    xdg-utils
+
+            - name: Install Rust toolchain
+              uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # v1
+              with:
+                  toolchain: 1.96.0
+                  targets: x86_64-unknown-linux-gnu
+
+            - name: Cache Rust build artifacts
+              uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+              with:
+                  key: zk-packager-linux-x86-64
+
+            - name: Install SQLx CLI
+              uses: taiki-e/install-action@b6b84cf49ebfe0176417bdce007c624f0db37f20 # v2.86.2
+              with:
+                  tool: sqlx-cli@0.9.0
+
+            - name: Install Bun
+              uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+            - name: Install JavaScript dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Build Linux packages
+              working-directory: rust_extra/backbeat_packager_app
+              run: bun tauri build --ci --bundles deb,rpm,appimage
+
+            - name: Generate checksums
+              shell: bash
+              run: |
+                  cd target/release/bundle
+                  find deb rpm appimage -type f \
+                    \( -name '*.deb' -o -name '*.rpm' -o -name '*.AppImage' \) \
+                    -print0 \
+                    | sort -z \
+                    | xargs -0 sha256sum > SHA256SUMS
+
+            - name: Upload Linux packages
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+              with:
+                  name: zk-backbeat-packager-linux-x86-64-${{ github.sha }}
+                  path: |
+                      target/release/bundle/deb/*.deb
+                      target/release/bundle/rpm/*.rpm
+                      target/release/bundle/appimage/*.AppImage
+                      target/release/bundle/SHA256SUMS
+                  archive: true
+                  if-no-files-found: error
+                  retention-days: 14

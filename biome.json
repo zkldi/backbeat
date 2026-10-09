@@ -12,7 +12,8 @@
 			"biome.json",
 			"tsconfig.base.json",
 			"rust/backbeat_app/src/**",
-			"rust/backbeat_vf_app/src/**"
+			"rust/backbeat_vf_app/src/**",
+			"rust_extra/backbeat_packager_app/src/**"
 		],
 		"maxSize": 67108864
 	},

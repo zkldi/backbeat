@@ -1,0 +1,225 @@
+.packager-shell {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+.packager-footer {
+	flex-shrink: 0;
+	padding: 0.5rem 2rem;
+	border-top: 1px solid var(--c-base-border);
+	font-size: 0.75rem;
+	color: var(--c-subtext-0);
+	background: var(--c-base);
+}
+nav {
+	display: flex;
+	gap: 1rem;
+	padding: 0 2rem;
+	border-bottom: 1px solid var(--c-base-border);
+	background: var(--c-base);
+}
+nav button {
+	padding: 0.75rem 0;
+	border-bottom: 2px solid transparent;
+	font-size: 0.875rem;
+	color: var(--c-subtext-0);
+	background: transparent;
+}
+nav button[aria-current="page"] {
+	border-color: var(--c-accent);
+	color: var(--c-text);
+}
+main {
+	overflow: auto;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	padding: 1.5rem 2rem;
+	background: var(--c-surface-0);
+}
+.package-view {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.dropzone {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	width: 100%;
+	min-height: 28rem;
+	border: 2px dashed var(--c-surface-border-0);
+	color: var(--c-subtext-0);
+	background: var(--c-base);
+}
+.dropzone strong {
+	font-size: 1rem;
+}
+.dropzone span {
+	font-size: 0.8rem;
+}
+.dropzone.hovering {
+	border-color: var(--c-accent);
+	background: var(--c-surface-accent-0);
+}
+.destinations {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+.destinations button {
+	width: 100%;
+	min-height: 4rem;
+	font-size: 1rem;
+}
+.store-path {
+	margin: 0.75rem 0 0;
+	font-size: 0.8rem;
+	color: var(--c-subtext-0);
+	overflow-wrap: anywhere;
+}
+.about {
+	line-height: 1.5;
+}
+.about h1 {
+	margin: 0 0 1rem;
+	line-height: 1.2;
+}
+.about p {
+	margin: 0 0 0.75rem;
+	font-size: 0.875rem;
+	color: var(--c-subtext-0);
+}
+.about hr {
+	margin: 1rem 0;
+}
+.about h2 {
+	margin: 0 0 0.75rem;
+	font-size: 1rem;
+}
+.extensions {
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	color: var(--c-subtext-1);
+}
+.progress {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	font-size: 0.8rem;
+}
+progress {
+	width: 100%;
+	height: 0.4rem;
+	margin: 0.75rem 0;
+	accent-color: var(--c-accent);
+}
+.results {
+	display: grid;
+	gap: 0.75rem;
+	margin: 0.75rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+.result-card {
+	min-width: 0;
+	padding: 1rem;
+	border: 1px solid var(--c-surface-border-0);
+	background: var(--c-base);
+}
+.result-heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	font-size: 0.875rem;
+}
+.result-heading strong {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.result-status {
+	flex-shrink: 0;
+	padding: 0.2rem 0.5rem;
+	border-radius: 0.25rem;
+	font-size: 0.8rem;
+	background: var(--c-surface-0);
+}
+.result-status[data-status="Running"] {
+	color: var(--c-text-accent);
+}
+.result-status[data-status="Failed"] {
+	color: var(--c-text-danger);
+	background: var(--c-surface-danger-0);
+}
+.result-count {
+	margin: 0.75rem 0 0.25rem;
+	font-size: 0.875rem;
+}
+.result-open {
+	margin-top: 0.75rem;
+	font-size: 0.8rem;
+}
+.result-missing {
+	margin-top: 0.75rem;
+	font-size: 0.8rem;
+	color: var(--c-text-warning);
+	overflow-wrap: anywhere;
+}
+.result-missing summary {
+	cursor: pointer;
+}
+.result-missing ul {
+	margin: 0.5rem 0 0;
+	padding-left: 1.25rem;
+}
+.path,
+.warning {
+	margin: 0.25rem 0;
+	font-size: 0.8rem;
+	color: var(--c-subtext-0);
+	overflow-wrap: anywhere;
+}
+.warning {
+	color: var(--c-text-warning);
+}
+.notice {
+	margin: 0.5rem 0;
+	padding: 0.5rem;
+	border: 1px solid var(--c-surface-danger-border-0);
+	font-size: 0.8rem;
+	color: var(--c-text-danger);
+	background: var(--c-surface-danger-0);
+	overflow-wrap: anywhere;
+}
+.empty {
+	font-size: 0.875rem;
+	color: var(--c-subtext-0);
+}
+.results + button {
+	margin-top: 1rem;
+}
+@media (max-width: 700px) {
+	.packager-footer {
+		padding-inline: 1rem;
+	}
+	main {
+		padding: 1rem;
+	}
+	.destinations {
+		grid-template-columns: 1fr;
+	}
+	.result-heading {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+}

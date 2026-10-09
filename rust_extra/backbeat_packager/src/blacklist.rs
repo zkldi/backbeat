@@ -14,6 +14,8 @@ static PATTERNS: OnceLock<RegexSet> = OnceLock::new();
 fn patterns() -> &'static RegexSet {
 	PATTERNS.get_or_init(|| {
 		RegexSet::new([
+			// Never recursively include previously packaged output as an asset.
+			r"(?i)\.(bb|bbzip)$",
 			// Other charts shouldn't be included in the dependency list.
 			r"(?i)\.(bms|bme|bml|pms)$",
 			r"(?i)\.bmson$",
