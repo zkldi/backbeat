@@ -310,9 +310,9 @@ mod tests {
 		let store =
 			backbeat_sdk::Backbeat::open_with_overridden_config_dir(dir.path().join("config"))
 				.unwrap();
-		let mut batch = BatchState::default();
+		let batch = BatchState::default();
 
-		let result = import_chart(&chart, &store, &mut batch).unwrap();
+		let result = import_chart(&chart, &store, &batch).unwrap();
 		assert_eq!(result.charts, 2);
 		assert_eq!(result.output, config.store.path.to_string_lossy());
 		assert_eq!(result.missing, vec!["missing.png"]);
@@ -325,7 +325,7 @@ mod tests {
 		);
 
 		// Retrying an import is idempotent, including assets shared by charts.
-		import_chart(&chart, &store, &mut batch).unwrap();
+		import_chart(&chart, &store, &batch).unwrap();
 		assert_eq!(store.stats().unwrap().charts, 2);
 		assert_eq!(store.stats().unwrap().asset_count, 1);
 		assert_eq!(fs::read_dir(&source).unwrap().count(), 2);
