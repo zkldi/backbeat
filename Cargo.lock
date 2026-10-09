@@ -7986,6 +7986,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "zk-backbeat-packager"
+version = "0.1.0"
+dependencies = [
+ "backbeat_core",
+ "backbeat_packager",
+ "backbeat_sdk",
+ "backbeat_store_config",
+ "open",
+ "serde",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tempfile",
+ "walkdir",
+]
+
+[[package]]
 name = "zlib-rs"
 version = "0.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

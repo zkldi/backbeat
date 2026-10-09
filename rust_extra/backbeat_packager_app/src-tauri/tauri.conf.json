@@ -1,0 +1,41 @@
+{
+	"$schema": "https://schema.tauri.app/config/2",
+	"productName": "zk's Backbeat Packager",
+	"version": "0.1.0",
+	"identifier": "ac.backbeat.packager",
+	"build": {
+		"beforeDevCommand": "bun run dev",
+		"beforeBuildCommand": "bun run build",
+		"devUrl": "http://localhost:1422",
+		"frontendDist": "../dist"
+	},
+	"app": {
+		"windows": [
+			{
+				"label": "main",
+				"title": "zk's Backbeat Packager",
+				"width": 940,
+				"height": 760,
+				"minWidth": 620,
+				"minHeight": 540,
+				"backgroundColor": "#141719"
+			}
+		],
+		"security": {
+			"csp": null
+		}
+	},
+	"bundle": {
+		"active": true,
+		"targets": "all",
+		"icon": [
+			"icons/32x32.png",
+			"icons/64x64.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico",
+			"icons/icon.png"
+		]
+	}
+}

@@ -6,7 +6,8 @@
 	"workspaces": [
 		"typescript/*",
 		"rust/backbeat_app",
-		"rust_extra/backbeat_vf_app"
+		"rust_extra/backbeat_vf_app",
+		"rust_extra/backbeat_packager_app"
 	],
 	"author": "zk",
 	"devDependencies": {

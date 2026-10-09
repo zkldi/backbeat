@@ -17,8 +17,8 @@ pub(crate) fn safe_extension(path: &Path) -> Option<&str> {
 	}
 }
 
-/// just try and make a filename reasonable
-pub(crate) fn sanitise_filename(name: &str) -> String {
+/// Make a portable filename stem, leaving room for an extension and collision suffix.
+pub fn sanitise_filename(name: &str) -> String {
 	let mut sanitised: String = name
 		.chars()
 		.map(|character| {
@@ -34,6 +34,9 @@ pub(crate) fn sanitise_filename(name: &str) -> String {
 		})
 		.collect();
 
+	while sanitised.len() > 200 {
+		sanitised.pop();
+	}
 	sanitised = sanitised.trim_end_matches([' ', '.']).to_owned();
 	if sanitised.is_empty() || matches!(sanitised.as_str(), "." | "..") {
 		return "something".to_owned();
@@ -83,5 +86,9 @@ mod tests {
 		assert_eq!(sanitise_filename("A/B: C?"), "A-B- C-");
 		assert_eq!(sanitise_filename("CON.txt"), "CON-.txt");
 		assert_eq!(sanitise_filename("..."), "something");
+		assert_eq!(sanitise_filename("../A\\B\n"), "..-A-B-");
+		assert_eq!(sanitise_filename("NUL. "), "NUL-");
+		assert_eq!(sanitise_filename(""), "something");
+		assert_eq!(sanitise_filename(&"界".repeat(100)), "界".repeat(66));
 	}
 }

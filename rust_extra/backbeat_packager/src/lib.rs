@@ -19,6 +19,7 @@ pub use error::PackageError;
 pub use format::sm_enrich;
 pub use fracturing::{MeldError, meld, meld_chart_bytes};
 pub use seen_cache::SeenCache;
+pub use util::sanitise_filename;
 
 use std::collections::{HashMap, HashSet};
 use std::io::{Seek, Write};
@@ -28,7 +29,6 @@ use backbeat_core::{AssetId, AssetPath, BackbeatFile, BbZipWriter};
 
 use crate::error::FromFileError;
 use crate::format::Format;
-use crate::util::sanitise_filename;
 
 /// Package the chart file at `path` into one [`BackbeatFile`] per playable chart.
 pub fn package(path: impl AsRef<Path>) -> Result<Vec<BackbeatFile>, PackageError> {

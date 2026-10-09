@@ -7,11 +7,12 @@ members = [
 	"rust_misc/*",
 	"rust_extra/*",
 	"rust/backbeat_app/src-tauri",
-	"rust_extra/backbeat_vf_app/src-tauri"
+	"rust_extra/backbeat_vf_app/src-tauri",
+	"rust_extra/backbeat_packager_app/src-tauri"
 ]
 # `backbeat_app` is a Tauri app and has a bunch of non-rust in it.
 # Lol special handling lol
-exclude = ["rust/backbeat_app", "rust_extra/backbeat_vf_app"]
+exclude = ["rust/backbeat_app", "rust_extra/backbeat_vf_app", "rust_extra/backbeat_packager_app"]
 
 [profile.release]
 opt-level = 3

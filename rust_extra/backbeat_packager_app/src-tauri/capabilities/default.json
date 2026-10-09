@@ -1,0 +1,11 @@
+{
+	"identifier": "default",
+	"description": "Packager window and file dialogs",
+	"windows": [
+		"main"
+	],
+	"permissions": [
+		"core:default",
+		"dialog:allow-open"
+	]
+}

@@ -52,3 +52,5 @@ yarn.lock
 pnpm-lock.yaml
 
 .scratchspace/
+
+rust_extra/backbeat_packager_app/src-tauri/gen/
