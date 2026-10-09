@@ -294,12 +294,15 @@ export function App() {
 											{entry.status}
 										</span>
 									</div>
-									<p class="path" title={entry.path}>Source: {entry.path}</p>
+									<p class="path" title={entry.path}>
+										Source: {entry.path}
+									</p>
 									<Show when={entry.result}>
 										{(result) => (
 											<>
 												<p class="result-count">
-													{result().charts} {result().charts === 1 ? "chart" : "charts"}
+													{result().charts}{" "}
+													{result().charts === 1 ? "chart" : "charts"}
 												</p>
 												<p class="path">
 													{entry.status === "Imported"
@@ -313,12 +316,23 @@ export function App() {
 													onClick={() => void openFolder(result().output)}
 													title={result().output}
 												>
-													{entry.status === "Imported" ? "Open store folder" : "Open containing folder"}
+													{entry.status === "Imported"
+														? "Open store folder"
+														: "Open containing folder"}
 												</button>
 												<Show when={result().missing.length}>
 													<details class="result-missing">
-														<summary>{result().missing.length} missing {result().missing.length === 1 ? "asset" : "assets"}</summary>
-														<ul><For each={result().missing}>{(path) => <li>{path}</li>}</For></ul>
+														<summary>
+															{result().missing.length} missing{" "}
+															{result().missing.length === 1
+																? "asset"
+																: "assets"}
+														</summary>
+														<ul>
+															<For each={result().missing}>
+																{(path) => <li>{path}</li>}
+															</For>
+														</ul>
 													</details>
 												</Show>
 											</>
@@ -326,7 +340,13 @@ export function App() {
 									</Show>
 									<Show when={entry.error}>
 										<p class="notice">{entry.error}</p>
-										<button class={`${buttons.button} result-open`} data-variant="base" onClick={() => void openFolder(entry.path)}>Open source folder</button>
+										<button
+											class={`${buttons.button} result-open`}
+											data-variant="base"
+											onClick={() => void openFolder(entry.path)}
+										>
+											Open source folder
+										</button>
 									</Show>
 								</li>
 							)}
@@ -346,13 +366,22 @@ export function App() {
 					<section class="about">
 						<h1>zk's Backbeat Packager</h1>
 						<p>
-							Convert rhythm game charts into <code>.bbzip</code> files that can be sent around and uploaded to sites, or convert them and put them straight into your Backbeat store.
+							Convert rhythm game charts into <code>.bbzip</code> files that can be
+							sent around and uploaded to sites, or convert them and put them straight
+							into your Backbeat store.
 						</p>
 						<p>
-							This isn't a "canonical" or official Backbeat packager. There isn't one. <b>Backbeat doesn't care about or understand <code>.bms</code> or <code>.dtx</code> files</b>. However, someone somewhere has to turn <code>.bms</code> files into <code>.bb</code> files that backbeat understands.
+							This isn't a "canonical" or official Backbeat packager. There isn't one.{" "}
+							<b>
+								Backbeat doesn't care about or understand <code>.bms</code> or{" "}
+								<code>.dtx</code> files
+							</b>
+							. However, someone somewhere has to turn <code>.bms</code> files into{" "}
+							<code>.bb</code> files that backbeat understands.
 						</p>
 						<p>
-							This is my personal packager, and it supports the things I personally wrote support for.
+							This is my personal packager, and it supports the things I personally
+							wrote support for.
 						</p>
 						<p>
 							Click '
@@ -369,8 +398,16 @@ export function App() {
 						</p>
 						<hr />
 						<h2>Supported file extensions</h2>
-						<p>Packaging requires game-specific logic, and this is <b>not</b> part of like, the "core" distribution of backbeat. I don't want to be maintaining rhythm game parsers for the rest of my life, as new features come in.</p>
-						<p>Writing your own packager is easy. If you need a custom one, go write it (or ask your agent to, lol!)</p>
+						<p>
+							Packaging requires game-specific logic, and this is <b>not</b> part of
+							like, the "core" distribution of backbeat. I don't want to be
+							maintaining rhythm game parsers for the rest of my life, as new features
+							come in.
+						</p>
+						<p>
+							Writing your own packager is easy. If you need a custom one, go write it
+							(or ask your agent to, lol!)
+						</p>
 						<p>This packager comes with support for these file formats:</p>
 						<p class="extensions">
 							{extensions.map((extension) => `.${extension}`).join(", ")}
