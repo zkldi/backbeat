@@ -1,13 +1,11 @@
 #![allow(unreachable_pub, clippy::all, clippy::restriction)]
 #![allow(clippy::pedantic, clippy::nursery, clippy::cargo)]
 
-//! An unfractured multi-chart source bundled as one `.bb` is corrupt:
-//! a Backbeat file must wrap exactly one playable chart.
+//! Store import accepts unfractured multi-chart sources without inspecting chart contents.
 
 use backbeat_core::ChartDesc;
 use backbeat_core::ChartFilename;
 use backbeat_core::{Assets, BackbeatFile, ChartData};
-use backbeat_inspector::inspect_bundle;
 
 mod support;
 use support::new_test_store;
@@ -37,8 +35,6 @@ fn import_bb_accepts_unfractured_multi_chart_sm() {
 		notes_count, 2,
 		"fixture must embed an unfractured multi-chart .sm"
 	);
-
-	assert!(inspect_bundle(&bb).is_err());
 
 	let bundle_id = store
 		.import_bundle(&bb)

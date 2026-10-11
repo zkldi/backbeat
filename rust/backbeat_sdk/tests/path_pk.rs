@@ -25,9 +25,8 @@ fn chart_id(bb: &BackbeatFile, algorithm: IdAlgorithm) -> ChartId {
 			alg: algorithm,
 			val: bb.chart_sha256().to_string(),
 		},
-		IdAlgorithm::Custom(_) => backbeat_inspector::inspect_bundle(bb)
-			.unwrap()
-			.chart_ids
+		IdAlgorithm::Custom(_) => bb
+			.additional_chart_ids()
 			.into_iter()
 			.find(|id| id.alg == algorithm)
 			.unwrap(),

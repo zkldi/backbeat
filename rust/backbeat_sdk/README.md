@@ -116,7 +116,7 @@ CREATE TABLE "chart_data" (
 -- certain filetypes that are useful for external reasons.
 --
 -- The list of chart IDs supported by backbeat is baked into core.
--- To add support for a new one, update `backbeat_inspector`. At the moment,
+-- To add support for a new one, update `backbeat_core`. At the moment,
 -- only `md5` is supported as an extra algorithm, however, I anticipate there
 -- to be more externally useful ones in the future.
 --

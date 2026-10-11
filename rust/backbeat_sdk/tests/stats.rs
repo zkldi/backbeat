@@ -30,12 +30,8 @@ fn stats_count_bundle_rows() {
 	};
 	let bundle_b = store.import_bundle(&bb_b).expect("import b");
 
-	let sha256_a = backbeat_inspector::inspect_bundle(&store.get_bundle(bundle_a).unwrap())
-		.unwrap()
-		.chart_sha256;
-	let sha256_b = backbeat_inspector::inspect_bundle(&store.get_bundle(bundle_b).unwrap())
-		.unwrap()
-		.chart_sha256;
+	let sha256_a = store.get_bundle(bundle_a).unwrap().chart_sha256();
+	let sha256_b = store.get_bundle(bundle_b).unwrap().chart_sha256();
 
 	assert_eq!(
 		sha256_a, sha256_b,

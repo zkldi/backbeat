@@ -49,7 +49,6 @@ tokio-util = { workspace = true, features = ["io-util", "rt"] }
 uuid = { workspace = true, features = ["v4"] }
 
 [dev-dependencies]
-backbeat_inspector.workspace = true
 sqlx = { workspace = true, features = ["sqlite"] }
 tokio = { workspace = true }
 flate2 = { workspace = true }

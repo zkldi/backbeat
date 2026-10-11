@@ -140,11 +140,11 @@ mod tests {
 	fn repairs_chart_ids() {
 		let (_temp, store) = new_test_store("corruption_repair_chart_ids");
 		let bb = bundle("chart.bms", b"#TITLE Test\n#ARTIST Artist\n#BPM 120\n");
-		let inspection = backbeat_inspector::inspect_bundle(&bb).unwrap();
+		let chart_id = bb.additional_chart_ids().into_iter().next().unwrap();
 		let bundle_id = store.import_bundle(&bb).unwrap();
 		let chart_sha256 = bb.chart_sha256();
-		let desired_chart_id = inspection.chart_ids[0].to_string();
-		let wrong_chart_id = format!("{}/wrong", inspection.chart_ids[0].alg);
+		let desired_chart_id = chart_id.to_string();
+		let wrong_chart_id = format!("{}/wrong", chart_id.alg);
 
 		BLOCK(async {
 			sqlx::query!("DELETE FROM chart_id WHERE chart_sha256 = ?1", chart_sha256)
