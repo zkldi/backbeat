@@ -18,7 +18,7 @@ test-capi:
 			native_libs=(-lsqlite3 -framework Security -framework SystemConfiguration -framework CoreFoundation -liconv)
 			;;
 		Linux)
-			native_libs=(-lsqlite3 -lssl -lcrypto -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc)
+			native_libs=(-lsqlite3 -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc)
 			;;
 		*)
 			echo "unsupported C API test platform: $(uname -s)" >&2

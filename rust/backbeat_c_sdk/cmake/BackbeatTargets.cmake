@@ -21,9 +21,8 @@ else()
             "-framework CoreFoundation"
             iconv Threads::Threads ${CMAKE_DL_LIBS})
     else()
-        find_dependency(OpenSSL COMPONENTS SSL Crypto)
         set(_backbeat_system_libraries
-            OpenSSL::SSL OpenSSL::Crypto gcc_s util rt Threads::Threads m ${CMAKE_DL_LIBS})
+            gcc_s util rt Threads::Threads m ${CMAKE_DL_LIBS})
     endif()
 endif()
 

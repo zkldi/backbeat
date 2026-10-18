@@ -124,7 +124,14 @@ sqlx = { version = "0.9.0", default-features = false, features = [
 
 # web stuff
 axum = "0.8.1"
-reqwest = { version = "0.12.8", features = ["stream", "gzip"] }
+reqwest = { version = "0.12.8", default-features = false, features = [
+	"stream",
+	"gzip",
+	"charset",
+	"http2",
+	"system-proxy",
+	"rustls-tls-native-roots",
+] }
 
 # gui
 tauri = "2"

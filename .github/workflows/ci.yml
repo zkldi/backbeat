@@ -139,7 +139,6 @@ jobs:
                   sudo apt-get install --yes --no-install-recommends \
                     build-essential \
                     cmake \
-                    libssl-dev \
                     pkg-config \
                     zip
 
@@ -195,6 +194,17 @@ jobs:
               uses: taiki-e/install-action@b6b84cf49ebfe0176417bdce007c624f0db37f20 # v2.86.2
               with:
                   tool: sqlx-cli@0.9.0
+
+            - name: Check Linux SDK TLS dependencies
+              if: runner.os == 'Linux'
+              shell: bash
+              run: |
+                  cargo tree --locked -p backbeat_c_sdk --target ${{ matrix.target }} \
+                    --edges normal --prefix none > target/capi-dependencies.txt
+                  if grep -E '^(openssl(-sys)?|native-tls|hyper-tls|tokio-native-tls) v' target/capi-dependencies.txt; then
+                    echo "The Linux SDK must not depend on OpenSSL or native TLS" >&2
+                    exit 1
+                  fi
 
             - name: Build static library
               run: cargo build --locked --release --target ${{ matrix.target }} -p backbeat_c_sdk
@@ -281,7 +291,7 @@ jobs:
                   if [[ "${{ runner.os }}" == "macOS" ]]; then
                     private_libs="-lsqlite3 -framework Security -framework SystemConfiguration -framework CoreFoundation -liconv"
                   else
-                    private_libs="-lsqlite3 -lssl -lcrypto -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc"
+                    private_libs="-lsqlite3 -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc"
                   fi
                   version="$(sed -n 's/^#define BKB_LIBVERSION //p' "$package_dir/include/backbeat.h")"
 
@@ -328,6 +338,33 @@ jobs:
                   cmake --build "$output_dir/cmake"
                   "$output_dir/cmake/version"
                   "$output_dir/cmake/cpp_link"
+
+            # Fucking fedora has crazy OpenSSL options that means I have to special case it.
+            - name: Smoke-test Linux package on Fedora
+              if: runner.os == 'Linux'
+              shell: bash
+              run: |
+                  docker run --rm --volume "$PWD:/source:ro" --workdir /source \
+                    --env BACKBEAT_PACKAGE=${{ matrix.package }} \
+                    fedora:43 bash -euo pipefail -c '
+                      dnf install --assumeyes gcc gcc-c++ cmake pkgconf-pkg-config
+                      package_dir="/source/dist/$BACKBEAT_PACKAGE"
+                      example_dir="/source/rust/backbeat_c_sdk/c_examples"
+                      cmake -S "$example_dir" -B /tmp/backbeat-cmake \
+                        -DCMAKE_PREFIX_PATH="$package_dir"
+                      cmake --build /tmp/backbeat-cmake
+                      ctest --test-dir /tmp/backbeat-cmake --output-on-failure
+                      /tmp/backbeat-cmake/store_info
+
+                      export PKG_CONFIG_PATH="$package_dir/lib/pkgconfig"
+                      read -r -a link_flags <<< "$(pkg-config --cflags --libs --static backbeat)"
+                      cc -std=c11 -Wall -Wextra -Werror "$example_dir/version.c" \
+                        "${link_flags[@]}" -o /tmp/backbeat-version
+                      c++ -std=c++17 -Wall -Wextra -Werror "$example_dir/cpp_link.cpp" \
+                        "${link_flags[@]}" -o /tmp/backbeat-cpp-link
+                      /tmp/backbeat-version
+                      /tmp/backbeat-cpp-link
+                    '
 
             - name: Create Unix ZIP
               if: runner.os != 'Windows'
