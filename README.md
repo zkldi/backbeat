@@ -26,6 +26,7 @@ It has **absolutely no support** for editing content, by design, so it will _nev
 
 ## Clients that integrate Backbeat:
 
+- [RhythmGame](https://rhythmgame.eu/)
 - Tentatively, lr2oraja-endlessdream
 - Tentatively, unnamed-sdvx-clone
 - (Your game, here?)
