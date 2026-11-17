@@ -76,7 +76,10 @@ impl BackbeatServerClient {
 	/// Create a new [`BackbeatServerClient`] aimed at this server.
 	pub fn new(base_url: &Url) -> Self {
 		Self {
-			client: Client::new(),
+			client: Client::builder()
+				.user_agent(format!("Backbeat/{}", backbeat_core::VERSION))
+				.build()
+				.expect("build Backbeat server HTTP client"),
 			base_url: base_url.to_owned(),
 		}
 	}

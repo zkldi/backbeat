@@ -244,6 +244,7 @@ impl Backbeat {
 			config.downloads.stream.0,
 		);
 		let general_http_client = Client::builder()
+			.user_agent(format!("Backbeat/{}", backbeat_core::VERSION))
 			.timeout(Duration::from_secs(15))
 			.build()
 			.map_err(CollectionClientError::Request)?;
